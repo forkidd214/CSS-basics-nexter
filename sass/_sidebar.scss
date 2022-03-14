@@ -1,0 +1,51 @@
+@use 'base' as *;
+
+.sidebar {
+  background-color: $color-primary;
+  grid-row: 1 / -1;
+  grid-column: sidebar-start / sidebar-end;
+
+  display: flex;
+  justify-content: center;
+
+  @include respond-to('lg') {
+    grid-row: 1 / span 1;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.nav-btn {
+  border: none;
+  border-radius: 0;
+  margin-top: 4rem;
+
+  &,
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    background-color: #fff;
+    width: 4.5rem;
+    height: 2px;
+  }
+
+  &::before {
+    transform: translateY(-1.5rem);
+  }
+  &::after {
+    transform: translateY(1.3rem);
+  }
+
+  @include respond-to('lg') {
+    margin-top: 0;
+    margin-right: 2rem;
+
+    &::before {
+      transform: translateY(-1.2rem);
+    }
+    &::after {
+      transform: translateY(1rem);
+    }
+  }
+}

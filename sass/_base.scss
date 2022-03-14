@@ -14,6 +14,43 @@ $color-grey-dark-2: #6d5d4b;
 $font-primary: 'Nunito', sans-serif;
 $font-display: 'Josefin Sans', sans-serif;
 
+//////////////////////////////////////////////////////////////////////////
+//**************************RESPONSIVE DESIGN***************************//
+/// Breakpoints
+/* prettier-ignore */
+$breakpoints: (
+  'sm': (max-width: 37.5em, ),  // ~ 600px
+  'md': (max-width: 48em, ),    // ~ 768px
+  'lg': (max-width: 62em, ),    // ~ 992px
+  'xl': (max-width: 80em, ),    // ~ 1280px
+  // '2xl': (min-width: 96em, ),  // 1536px ~
+);
+
+/// Responsive breakpoint manager
+/// @access public
+/// @param {String} $breakpoint - Breakpoint
+/// @requires $breakpoints
+@mixin respond-to($breakpoint) {
+  $raw-query: map-get($breakpoints, $breakpoint);
+
+  @if $raw-query {
+    $query: if(
+      type-of($raw-query) == 'string',
+      unquote($raw-query),
+      inspect($raw-query)
+    );
+
+    @media only screen and #{$query} {
+      @content;
+    }
+  } @else {
+    @error 'No value found for `#{$breakpoint}`. '
+    +'Please make sure it is defined in `$breakpoints` map.';
+  }
+}
+//**************************RESPONSIVE DESIGN***************************//
+//////////////////////////////////////////////////////////////////////////
+
 *,
 *::before,
 *::after {
@@ -25,6 +62,10 @@ $font-display: 'Josefin Sans', sans-serif;
 html {
   box-sizing: border-box;
   font-size: 62.5%; // 10px/16px = 62.5% -> 1rem = 10px
+
+  @include respond-to('xl') {
+    font-size: 50%;
+  }
 }
 
 body {
@@ -32,4 +73,44 @@ body {
   font-weight: 300;
   line-height: 1.6;
   color: $color-grey-dark-2;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: 80vh min-content 40vw repeat(3, min-content);
+  grid-template-columns:
+    [sidebar-start]
+    8rem
+    [sidebar-end full-start]
+    minmax(6rem, 1fr)
+    [center-start]
+    repeat(8, [col-start] minmax(min-content, 14rem) [col-end])
+    [center-end]
+    minmax(6rem, 1fr)
+    [full-end];
+
+  @include respond-to('lg') {
+    grid-template-rows: 6rem 80vh min-content 40vw repeat(3, min-content);
+    grid-template-columns:
+      [full-start sidebar-start]
+      minmax(6rem, 1fr)
+      [center-start]
+      repeat(8, [col-start] minmax(min-content, 14rem) [col-end])
+      [center-end]
+      minmax(6rem, 1fr)
+      [full-end sidebar-end];
+  }
+  @include respond-to('md') {
+    grid-template-rows:
+      6rem
+      calc(100vh - 6rem);
+    grid-template-columns:
+      [full-start sidebar-start]
+      minmax(6rem, 1fr)
+      [center-start]
+      repeat(8, [col-start] minmax(min-content, 14rem) [col-end])
+      [center-end]
+      minmax(6rem, 1fr)
+      [full-end sidebar-end];
+  }
 }
